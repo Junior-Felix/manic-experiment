@@ -5,10 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Earth Textures</title>
+    <link rel="stylesheet" href="./src/style.css" />
     <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
   <body>
+    <div id="controls">
+      <button id="left">⟲ Left</button>
+      <select id="continentSelect">
+        <option value="">Select a continent</option>
+        <option value="africa">Africa</option>
+        <option value="europe">Europe</option>
+        <option value="asia">Asia</option>
+        <option value="north-america">North America</option>
+        <option value="south-america">South America</option>
+        <option value="australia">Australia</option>
+      </select>
+      <button id="right">Right ⟳</button>
+    </div>
     <a-scene
       mindar-image="imageTargetSrc: /manic-experiment/targets/targets.mind;"
       color-space="sRGB"
@@ -24,12 +38,54 @@
         />
       </a-assets>
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-entity cursor="rayOrigin: mouse" raycaster="objects: .hotspot">
+      </a-entity>
       <a-entity mindar-image-target="targetIndex: 0">
         <a-sphere
           radius="0.6"
           position="0 0 0.1"
           material="src: #baseColor; normalMap: #normalMap;"
         >
+          <a-sphere
+            class="hotspot"
+            position="-0.16  0.68 0.70"
+            radius="0.08"
+            color="red"
+            hotspot="name: north-america"
+          >
+          </a-sphere>
+          <a-sphere
+            class="hotspot"
+            position="0.49  -0.35 0.79"
+            radius="0.08"
+            color="blue"
+            hotspot="name: south-america"
+          >
+          </a-sphere>
+          <a-sphere
+            class="hotspot"
+            position="0.89 0.10 -0.41"
+            radius="0.04"
+            color="green"
+            hotspot="name: africa"
+          >
+          </a-sphere>
+          <a-sphere
+            class="hotspot"
+            position="0.19 0.45 -0.86"
+            radius="0.05"
+            color="purple"
+            hotspot="name: asia"
+          >
+          </a-sphere>
+          <a-sphere
+            class="hotspot"
+            position="-0.61 -0.38 -0.67"
+            color="yellow"
+            radius="0.04"
+            hotspot="name: australia"
+          >
+          </a-sphere>
         </a-sphere>
       </a-entity>
     </a-scene>

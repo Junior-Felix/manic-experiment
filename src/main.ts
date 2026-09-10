@@ -1,60 +1,107 @@
-import './style.css'
-import heroImg from './assets/hero.png'
-import typescriptLogo from './assets/typescript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.ts'
+const rotations = {
+  africa: { x: 0, y: -110, z: 0 },
+  "north-america": { x: 30, y: 10, z: 0 },
+  "south-america": { x: 0, y: -20, z: 0 },
+  europe: { x: -35, y: -135, z: 0 },
+  asia: { x: -20, y: -175, z: 0 },
+  australia: { x: 25, y: -225, z: 0 },
+};
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${typescriptLogo}" class="framework" alt="TypeScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.ts</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+const continentFacts = {
+  africa: {
+    name: "Africa",
+    fact: "Africa is the second-largest continent by both area and population. It is home to the Sahara, the world's largest hot desert.",
+  },
 
-<div class="ticks"></div>
+  europe: {
+    name: "Europe",
+    fact: "Europe is known for its rich history and cultural diversity. It contains many countries despite being one of the smaller continents.",
+  },
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://www.typescriptlang.org" target="_blank">
-          <img class="button-icon" src="${typescriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+  asia: {
+    name: "Asia",
+    fact: "Asia is the largest continent by both area and population. It contains more than half of the world's population.",
+  },
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+  "north-america": {
+    name: "North America",
+    fact: "North America includes countries such as Canada, the United States, and Mexico, and stretches from the Arctic to the tropics.",
+  },
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+  "south-america": {
+    name: "South America",
+    fact: "South America is home to the Amazon rainforest and the Andes, the longest continental mountain range in the world.",
+  },
+
+  australia: {
+    name: "Australia",
+    fact: "Australia is the smallest continent and is known for its unique wildlife, including kangaroos, koalas, and wombats.",
+  },
+};
+const sphere = document.querySelector("#sphere");
+const select = document.querySelector("#continentSelect");
+
+function switchContinent(continent) {
+  const rotation = rotations[continent];
+
+  sphere.setAttribute("animation", {
+    property: "rotation",
+    to: `${rotation.x} ${rotation.y} ${rotation.z}`,
+    dur: 1000,
+    easing: "easeInOutQuad",
+  });
+}
+select.addEventListener("change", () => {
+  const continent = select.value;
+
+  if (!continent) return;
+
+  const rotation = rotations[continent];
+
+  sphere.setAttribute("animation", {
+    property: "rotation",
+    to: `${rotation.x} ${rotation.y} ${rotation.z}`,
+    dur: 1000,
+    easing: "easeInOutQuad",
+  });
+});
+document.querySelector("#left").addEventListener("click", () => {
+  const rotation = sphere.getAttribute("rotation");
+
+  sphere.setAttribute("rotation", {
+    x: rotation.x,
+    y: rotation.y - 30,
+    z: rotation.z,
+  });
+});
+
+document.querySelector("#right").addEventListener("click", () => {
+  const rotation = sphere.getAttribute("rotation");
+
+  sphere.setAttribute("rotation", {
+    x: rotation.x,
+    y: rotation.y + 30,
+    z: rotation.z,
+  });
+});
+AFRAME.registerComponent("hotspot", {
+  schema: {
+    name: { type: "string" },
+  },
+  init: function () {
+    this.el.addEventListener("click", (event) => {
+      switchContinent(this.data.name);
+      const continent = continentFacts[this.data.name];
+      if (!continent) {
+        console.log("No facts found for:", this.data.name);
+        return;
+      }
+
+      document.querySelector("#continentName").textContent = continent.name;
+
+      document.querySelector("#continentFact").textContent = continent.fact;
+
+      document.querySelector("#infoPanel").style.display = "block";
+    });
+  },
+});
