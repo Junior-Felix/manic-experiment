@@ -16,10 +16,18 @@
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
-      <a-assets> </a-assets>
+      <a-assets>
+        <img src="/manic-experiment/earth/8k_earth_daymap.jpg" id="baseColor" />
+        <img src="8k_earth_normal_map.png" id="normalMap" />
+      </a-assets>
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-sphere radius="0.8" position="0 0 0.1" color="green"></a-sphere>
+        <a-sphere
+          radius="0.6"
+          position="0 0 0.1"
+          material="src: #baseColor; normalMap: #normalMap"
+        >
+        </a-sphere>
       </a-entity>
     </a-scene>
     <script type="module" src="./src/main.ts"></script>
