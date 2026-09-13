@@ -43,6 +43,7 @@ const select = document.querySelector("#continentSelect");
 
 function switchContinent(continent) {
   const rotation = rotations[continent];
+  console.log("test switch");
 
   sphere.setAttribute("animation", {
     property: "rotation",
